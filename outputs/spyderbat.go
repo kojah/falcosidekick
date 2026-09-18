@@ -44,10 +44,10 @@ func isSourcePresent(config *types.Configuration) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return false, errors.New("HTTP error: " + resp.Status)
 	}
-	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -100,6 +100,7 @@ func makeSource(config *types.Configuration) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		if resp.StatusCode == http.StatusBadRequest {
 			if b, err := io.ReadAll(resp.Body); err == nil {
@@ -108,7 +109,6 @@ func makeSource(config *types.Configuration) error {
 		}
 		return errors.New("HTTP error: " + resp.Status)
 	}
-	defer resp.Body.Close()
 
 	return nil
 }
